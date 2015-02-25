@@ -60,6 +60,7 @@
     <Compile Include="MessageReaderTest.cs" />
     <Compile Include="MessageWriterTest.cs" />
     <Compile Include="IntrospectorTest.cs" />
+    <Compile Include="MarshalByRefObjectTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\dbus-sharp.csproj">
