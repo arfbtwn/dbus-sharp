@@ -13,13 +13,13 @@ using DBus;
 using DBus.Protocol;
 using org.freedesktop.DBus;
 
-namespace DBus.Tests.Export
+namespace DBus.Tests
 {
 	[TestFixture]
 	public class MarshalByRefObjectTest
 	{
-		Test test;
-		Test test_server;
+		TestByRef test;
+		TestByRef test_server;
 
 		string bus_name = "org.dbussharp.test";
 		ObjectPath path = new ObjectPath ("/org/dbussharp/test");
@@ -29,12 +29,12 @@ namespace DBus.Tests.Export
 		[TestFixtureSetUp]
 		public void Setup ()
 		{
-			test_server = new Test ();
+			test_server = new TestByRef ();
 			Bus.Session.Register (path, test_server);
 			Assert.AreEqual (Bus.Session.RequestName (bus_name), RequestNameReply.PrimaryOwner);
 
 			Assert.AreNotEqual (Bus.Session.RequestName (bus_name), RequestNameReply.PrimaryOwner);
-			test = Bus.Session.GetObject<Test> (bus_name, path);
+			test = Bus.Session.GetObject<TestByRef> (bus_name, path);
 		}
 
 		[TestFixtureTearDown]
@@ -233,30 +233,8 @@ namespace DBus.Tests.Export
 		}*/
 	}
 
-	public delegate void SomeEventHandler (string arg1, object arg2, double arg3, MyTuple mt);
-
-	public interface ITestOne
-	{
-		event SomeEventHandler SomeEvent;
-		void FireSomeEvent ();
-		void VoidObject (object obj);
-		int StringLength (string str);
-		void VoidEnums (TestEnum a, TestEnum b);
-		void VoidString (string str);
-		object GetSomeVariant ();
-		void ThrowSomeException ();
-		void WithOutParameters (out uint n, string str, out string ostr);
-		void WithOutParameters2 (out uint[] a1, out uint[] a2, out uint[] a3);
-		void GetPresences (uint[] @contacts, out IDictionary<uint,SimplePresence> @presence);
-		object ComplexAsVariant (object v, int num);
-
-		ITestOne[] GetEmptyObjectArray ();
-		ITestOne[] GetObjectArray ();
-		int SomeProp { get; set; }
-	}
-
 	[Interface ("org.dbussharp.test")]
-	public class Test : MarshalByRefObject, ITestOne
+	public class TestByRef : MarshalByRefObject
 	{
 		public event SomeEventHandler SomeEvent;
 
@@ -335,53 +313,16 @@ namespace DBus.Tests.Export
 			return v;
 		}
 
-		public ITestOne[] GetEmptyObjectArray ()
+		public TestByRef[] GetEmptyObjectArray ()
 		{
-			return new Test[] {};
+			return new TestByRef[] {};
 		}
 
-		public ITestOne[] GetObjectArray ()
+		public TestByRef[] GetObjectArray ()
 		{
-			return new ITestOne[] {this};
+			return new TestByRef[] {this};
 		}
 
 		public int SomeProp { get; set; }
-	}
-
-	public enum TestEnum : byte
-	{
-		Foo,
-		Bar,
-	}
-
-	public struct MyTuple
-	{
-		public MyTuple (string a, string b)
-		{
-			A = a;
-			B = b;
-		}
-
-		public string A;
-		public string B;
-	}
-
-	public struct MyTuple2
-	{
-		public string A;
-		public string B;
-		public IDictionary<int,MyTuple> C;
-	}
-
-	public enum ConnectionPresenceType : uint
-	{
-		Unset = 0, Offline = 1, Available = 2, Away = 3, ExtendedAway = 4, Hidden = 5, Busy = 6, Unknown = 7, Error = 8,
-	}
-
-	public struct SimplePresence
-	{
-		public ConnectionPresenceType Type;
-		public string Status;
-		public string StatusMessage;
 	}
 }
