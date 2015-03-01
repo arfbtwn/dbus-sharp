@@ -211,9 +211,15 @@ namespace DBus
 			if (mi != null)
 				iface = Mapper.GetInterfaceName (mi);
 
-			if (mi != null && mi.IsSpecialName) {
-				methodName = methodName.Replace ("get_", "Get");
-				methodName = methodName.Replace ("set_", "Set");
+			if (mi.IsProperty ()) {
+				var propertyName = methodName.Remove (0, 4);
+
+				if (mi.ReturnType != typeof(void)) {
+					retVal = SendPropertyGet (iface, propertyName);
+				} else {
+					SendPropertySet (iface, propertyName, inArgs [0]);
+				}
+				return;
 			}
 
 			MessageWriter writer = new MessageWriter (conn);
@@ -227,7 +233,17 @@ namespace DBus
 			if (reader == null)
 				return;
 
-			retVal = reader.ReadValue (mi.ReturnType);
+			var outTypes = Mapper.GetTypes (ArgDirection.Out, mi.GetParameters ());
+
+			outArgs = new object[outTypes.Length];
+
+			for (int i = 0; i < outArgs.Length; ++i) {
+				outArgs [i] = reader.ReadValue (outTypes [i]);
+			}
+
+			if (mi.ReturnType != typeof(void)) {
+				retVal = reader.ReadValue (mi.ReturnType);
+			}
 		}
 
 		public static object GetObject (Connection conn, string bus_name, ObjectPath object_path, Type declType)

@@ -37,6 +37,13 @@ namespace DBus.Tests.Export
 			test = Bus.Session.GetObject<Test> (bus_name, path);
 		}
 
+		[TestFixtureTearDown]
+		public void TearDown ()
+		{
+			Bus.Session.ReleaseName (bus_name);
+			Bus.Session.Unregister (path);
+		}
+
 		/// <summary>
 		///
 		/// </summary>

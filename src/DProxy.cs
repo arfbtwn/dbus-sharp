@@ -3,6 +3,7 @@
 // See COPYING for details
 
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting.Proxies;
 using System.Runtime.Remoting.Messaging;
@@ -57,9 +58,7 @@ namespace DBus
 			Exception exception;
 			busObject.Invoke (callMessage.MethodBase, callMessage.MethodName, callMessage.InArgs, out outArgs, out retVal, out exception);
 
-			MethodReturnMessageWrapper returnMessage = new MethodReturnMessageWrapper ((IMethodReturnMessage) message);
-			returnMessage.Exception = exception;
-			returnMessage.ReturnValue = retVal;
+			var returnMessage = ConstructReturnMessage (retVal, outArgs, exception, callMessage);
 
 			return returnMessage;
 		}
@@ -69,6 +68,34 @@ namespace DBus
 			//FIXME: remove handlers/match rules here
 			if (ProtocolInformation.Verbose)
 				Console.Error.WriteLine ("Warning: Finalization of " + busObject.Path + " not yet supported");
+		}
+
+		internal static IMethodReturnMessage ConstructReturnMessage(object retVal,
+			object[] outArgs,
+			Exception exception,
+			IMethodCallMessage callMessage)
+		{
+			if (null != exception) {
+				return new ReturnMessage (exception, callMessage);
+			}
+
+			var outIndices = callMessage.MethodBase.GetParameters ()
+				.Where (x => x.IsOut || x.ParameterType.IsByRef)
+				.Select (x => x.Position);
+
+			var args = new object[callMessage.ArgCount];
+			int count = 0;
+			foreach (var index in outIndices) {
+				args [index] = outArgs [count++];
+			}
+
+			return new ReturnMessage (
+				retVal,
+				args,
+				count,
+				callMessage.LogicalCallContext,
+				callMessage
+			);
 		}
 	}
 }
