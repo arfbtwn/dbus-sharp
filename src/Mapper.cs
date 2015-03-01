@@ -37,18 +37,32 @@ namespace DBus
 
 		public static Type GetInterfaceType(Type type, string iface)
 		{
-			return type.GetInterfaces()
-				.Concat(GetHierarchy(type))
+			return GetHierarchy(type, true)
 				.FirstOrDefault (x => iface == GetInterfaceName (x));
 		}
 
-		private static IEnumerable<Type> GetHierarchy(Type type)
+		internal static IEnumerable<Type> GetHierarchy(Type type)
 		{
+			return GetHierarchy (type, false);
+		}
+
+		internal static IEnumerable<Type> GetHierarchy(Type type, bool includeInterfaces)
+		{
+			if (null == type) {
+				yield break;
+			}
+
 			if (IsPublic (type)) {
 				yield return type;
 			}
 
-			foreach (var super in GetHierarchy (type.BaseType)) {
+			if (includeInterfaces) {
+				foreach (var @interface in type.GetInterfaces ()) {
+					yield return @interface;
+				}
+			}
+
+			foreach (var super in GetHierarchy (type.BaseType, false)) {
 				if (IsPublic (type)) {
 					yield return super;
 				}
