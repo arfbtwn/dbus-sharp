@@ -57,6 +57,7 @@
     <Compile Include="IntrospectorTest.cs" />
     <Compile Include="MarshalByRefObjectTest.cs" />
     <Compile Include="MapperTest.cs" />
+    <Compile Include="ExportInterfaceTestExtended.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\dbus-sharp.csproj">
