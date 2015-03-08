@@ -46,6 +46,19 @@ namespace DBus
 			return GetHierarchy (type, false);
 		}
 
+		internal static IEnumerable<IEnumerable<Type>> GetDBusInterfaceHierarchies (Type type)
+		{
+			var roots = type.Append (type.GetInterfaces ()).Where (x => IsPublic(x));
+
+			if (roots.Any (x => roots.Any (y => y != x && y.IsAssignableFrom (x)))) {
+				throw new Exception ();
+			}
+
+			foreach (var root in roots) {
+				yield return root.Append (root.GetInterfaces ());
+			}
+		}
+
 		internal static IEnumerable<T> Append <T> (this T head, IEnumerable<T> tail)
 		{
 			return new [] { head }.Concat (tail);

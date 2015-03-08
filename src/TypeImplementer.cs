@@ -71,12 +71,13 @@ namespace DBus
 
 			TypeBuilder typeB = modB.DefineType (proxyName, TypeAttributes.Class | TypeAttributes.Public, parentType);
 
-			string interfaceName = null;
-			if (declType.IsInterface)
-				Implement (typeB, declType, interfaceName = Mapper.GetInterfaceName (declType));
+			foreach (var root in Mapper.GetDBusInterfaceHierarchies (declType)) {
+				string interfaceName = Mapper.GetInterfaceName (root.First ());
 
-			foreach (Type iface in declType.GetInterfaces ())
-				Implement (typeB, iface, interfaceName == null ? Mapper.GetInterfaceName (iface) : interfaceName);
+				foreach (var type in root) {
+					Implement (typeB, type, interfaceName);
+				}
+			}
 
 			retT = typeB.CreateType ();
 
@@ -103,7 +104,7 @@ namespace DBus
 			foreach (MethodInfo declMethod in evaluation_set) {
 				MethodBuilder builder = CreateMethodBuilder (typeB, declMethod);
 				ILGenerator ilg = builder.GetILGenerator ();
-				GenHookupMethod (ilg, declMethod, sendMethodCallMethod, Mapper.GetInterfaceName (iface), declMethod.Name);
+				GenHookupMethod (ilg, declMethod, sendMethodCallMethod, interfaceName, declMethod.Name);
 			}
 
 
