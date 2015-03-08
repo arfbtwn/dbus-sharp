@@ -67,8 +67,8 @@ namespace DBus
 
 		void BuildOne ()
 		{
-			var children = Type.GetInterfaces ();
-			var firstGeneration = children
+			var ancestors = Type.GetInterfaces ();
+			var firstGeneration = ancestors
 				.WhereAll ((x, y) => !x.IsAssignableFrom(y))
 				.ToArray ();
 
