@@ -35,28 +35,17 @@ namespace DBus
 			return argName;
 		}
 
-		public static Type GetInterfaceType(Type type, string iface)
+		[Obsolete]
+		internal static Type GetInterfaceType(Type type, string iface)
 		{
 			return GetHierarchy(type, true)
 				.FirstOrDefault (x => iface == GetInterfaceName (x));
 		}
 
+		[Obsolete]
 		internal static IEnumerable<Type> GetHierarchy(Type type)
 		{
 			return GetHierarchy (type, false);
-		}
-
-		internal static IEnumerable<IEnumerable<Type>> GetDBusInterfaceHierarchies (Type type)
-		{
-			var roots = type.Append (type.GetInterfaces ()).Where (x => IsPublic(x));
-
-			if (roots.Any (x => roots.Any (y => y != x && y.IsAssignableFrom (x)))) {
-				throw new Exception ();
-			}
-
-			foreach (var root in roots) {
-				yield return root.Append (root.GetInterfaces ());
-			}
 		}
 
 		internal static IEnumerable<T> Append <T> (this T head, IEnumerable<T> tail)
@@ -69,6 +58,7 @@ namespace DBus
 			return sequence.Where (x => sequence.All (y => x == y || filterFunc(x, y)));
 		}
 
+		[Obsolete]
 		internal static IEnumerable<Type> GetHierarchy(Type type, bool includeInterfaces)
 		{
 			if (null == type || typeof(object) == type || typeof(MarshalByRefObject) == type) {

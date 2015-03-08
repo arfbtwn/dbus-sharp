@@ -71,10 +71,13 @@ namespace DBus
 
 			TypeBuilder typeB = modB.DefineType (proxyName, TypeAttributes.Class | TypeAttributes.Public, parentType);
 
-			foreach (var root in Mapper.GetDBusInterfaceHierarchies (declType)) {
-				string interfaceName = Mapper.GetInterfaceName (root.First ());
+			var tree = new InterfaceTree (declType);
 
-				foreach (var type in root) {
+			foreach (var pub in tree.Where (x => Mapper.IsPublic (x)))
+			{
+				string interfaceName = Mapper.GetInterfaceName (pub.Type);
+
+				foreach (var type in pub.Types) {
 					Implement (typeB, type, interfaceName);
 				}
 			}

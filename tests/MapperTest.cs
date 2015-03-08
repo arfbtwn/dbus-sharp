@@ -156,31 +156,6 @@ namespace DBus.Tests
 			}
 		}
 
-		[TestFixture(typeof(IBase), 0)]
-		[TestFixture(typeof(IDerived), 0)]
-		[TestFixture(typeof(IDerivedMore), 1)]
-		[TestFixture(typeof(IDerivedRenamed), 1)]
-		[TestFixture(typeof(IComposite), 3)]
-		[TestFixture(typeof(IRestaurant), 1)]
-		[TestFixture(typeof(IRestaurantv2), 1)]
-		class GetDBusIntefaceHierarchiesTests {
-			readonly Type type;
-			readonly int expected;
-			public GetDBusIntefaceHierarchiesTests (Type type, int expected)
-			{
-				this.type = type;
-				this.expected = expected;
-			}
-
-			[Test]
-			public void Test ()
-			{
-				var got = Mapper.GetDBusInterfaceHierarchies (type);
-
-				Assert.AreEqual (expected, got.Count ());
-			}
-		}
-
 		interface IFoo { }
 
 		class BadClass : Test, IFoo { }

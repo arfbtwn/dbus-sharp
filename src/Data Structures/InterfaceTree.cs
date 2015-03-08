@@ -22,6 +22,12 @@ namespace DBus
 			}
 		}
 
+		public IEnumerable<Type> Types {
+			get {
+				return Type.Append(Parents.SelectMany (x => x.Types));
+			}
+		}
+
 		public bool IsInTree (Type type)
 		{
 			return type.IsAssignableFrom (Type);
