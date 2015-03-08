@@ -46,6 +46,11 @@ namespace DBus
 			return GetHierarchy (type, false);
 		}
 
+		internal static IEnumerable<T> WhereAll<T>(this IEnumerable<T> sequence, Func<T, T, bool> filterFunc) where T : class
+		{
+			return sequence.Where (x => sequence.All (y => x == y || filterFunc(x, y)));
+		}
+
 		internal static IEnumerable<Type> GetHierarchy(Type type, bool includeInterfaces)
 		{
 			if (null == type) {
@@ -190,7 +195,7 @@ namespace DBus
 
 		public static string GetInterfaceName (Type type)
 		{
-			return type.GetCustomAttributes (typeof (InterfaceAttribute), true)
+			return type.GetCustomAttributes (typeof (InterfaceAttribute), false)
 				.Cast<InterfaceAttribute> ()
 				.Select (i => i.Name)
 				.DefaultIfEmpty (type.FullName)

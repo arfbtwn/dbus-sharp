@@ -83,6 +83,7 @@
     <Compile Include="Unix\UnixError.cs" />
     <Compile Include="Unix\UnixSocket.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Data Structures\InterfaceTree.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -92,5 +93,8 @@
     <Content Include="dbus-sharp.dll.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data Structures\" />
   </ItemGroup>
 </Project>
