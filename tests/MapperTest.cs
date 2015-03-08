@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Reflection;
 
+using DBus;
+
 using NUnit.Framework;
 
 namespace DBus.Tests
@@ -9,20 +11,40 @@ namespace DBus.Tests
 	[TestFixture]
 	public class MapperTest
 	{
-		MethodInfo withOutParameters = typeof(ITestOne).GetMethod ("WithOutParameters");
+		[TestFixture(
+			typeof(ITestOne),
+			"WithOutParameters",
+			new [] { typeof(string) },
+			new []{ typeof(uint), typeof(string) }
+		)]
+		class MapperGetTypes {
+			readonly Type type;
+			readonly string methodName;
+			readonly Type[] inParams;
+			readonly Type[] outParams;
+			public MapperGetTypes (Type type, string methodName, Type[] inParams, Type[] outParams)
+			{
+				this.type = type;
+				this.methodName = methodName;
+				this.inParams = inParams;
+				this.outParams = outParams;
+			}
 
-		[Test]
-		public void MapperGetTypes ()
-		{
-			Assert.IsNotNull (withOutParameters);
+			[Test]
+			public void Test () {
 
-			var parms = withOutParameters.GetParameters ();
+				var method = type.GetMethod (methodName);
 
-			Type[] inTypes = Mapper.GetTypes (ArgDirection.In, parms);
-			Type[] outTypes = Mapper.GetTypes (ArgDirection.Out, parms);
+				Assert.IsNotNull (method);
 
-			Assert.AreEqual (new [] { typeof(string) }, inTypes);
-			Assert.AreEqual (new [] { typeof(uint), typeof(string) }, outTypes);
+				var parms = method.GetParameters ();
+
+				Type[] inTypes = Mapper.GetTypes (ArgDirection.In, parms);
+				Type[] outTypes = Mapper.GetTypes (ArgDirection.Out, parms);
+
+				Assert.AreEqual (inParams, inTypes);
+				Assert.AreEqual (outParams, outTypes);
+			}
 		}
 
 		[Test]
@@ -47,21 +69,141 @@ namespace DBus.Tests
 			Assert.AreEqual (typeof(ITestOne), typeFromIntByName);
 		}
 
-		[Test]
-		public void MapperGetHierarchy ()
-		{
-			var got = Mapper.GetHierarchy (typeof(Test));
+		[TestFixture(typeof(IComposite), 4)]
+		class InterfaceTreeDepthTests {
+			readonly Type type;
+			readonly int expected;
+			public InterfaceTreeDepthTests(Type type, int expected)
+			{
+				this.type = type;
+				this.expected = expected;
+			}
 
-			Assert.AreEqual (0, got.Count ());
-
-			got = Mapper.GetHierarchy (typeof(TestByRef));
-
-			Assert.AreEqual (1, got.Count ());
-
-			got = Mapper.GetHierarchy (typeof(ITestOne));
-
-			Assert.AreEqual (1, got.Count ());
+			[Test]
+			public void Test ()
+			{
+				var tree = new InterfaceTree (type);
+				Assert.AreEqual (expected, tree.Depth);
+			}
 		}
+
+		[TestFixture(
+			typeof(IComposite),
+			new [] {
+				typeof(IDerivedMore),
+				typeof(IDerived),
+				typeof(IBase),
+				typeof(IOther)
+			}
+		)]
+		class InterfaceTreeSubTreeTest {
+			readonly Type type;
+			readonly Type[] contents;
+			public InterfaceTreeSubTreeTest(Type type, params Type[] contents)
+			{
+				this.type = type;
+				this.contents = contents;
+			}
+
+			[Test]
+			public void Test ()
+			{
+				var tree = new InterfaceTree (type);
+
+				foreach (var super in contents) {
+					Assert.IsTrue (tree.IsInTree (super));
+				}
+			}
+		}
+
+		[Test]
+		public void InterfaceTreeWhereTest ()
+		{
+			var tree = new InterfaceTree (typeof(IComposite));
+			var subtree = tree
+				.Where (type => DerivedMoreInterfaceName == Mapper.GetInterfaceName (type))
+				.First ();
+
+			Assert.AreEqual (typeof(IDerivedMore), subtree.Type);
+		}
+
+		[TestFixture(typeof(Test), 1)]
+		[TestFixture(typeof(TestByRef), 1)]
+		[TestFixture(typeof(ITestOne), 1)]
+		[TestFixture(typeof(BadClass), true, 4)]
+		[TestFixture(typeof(IDerivedMore), 1)]
+		[TestFixture(typeof(IDerivedMore), true, 3)]
+		class MapperGetHierarchyTests {
+			readonly Type type;
+			readonly bool includeInterfaces;
+			readonly int expected;
+			public MapperGetHierarchyTests(Type type, bool includeInterfaces, int expected)
+			{
+				this.type = type;
+				this.includeInterfaces = includeInterfaces;
+				this.expected = expected;
+			}
+
+			public MapperGetHierarchyTests (Type type, int expected)
+				: this (type, false, expected) { }
+
+			[Test]
+			public void Test ()
+			{
+				var got = Mapper.GetHierarchy (type, includeInterfaces);
+
+				Assert.AreEqual (expected, got.Count ());
+			}
+		}
+
+		[TestFixture(typeof(IBase), 0)]
+		[TestFixture(typeof(IDerived), 0)]
+		[TestFixture(typeof(IDerivedMore), 1)]
+		[TestFixture(typeof(IDerivedRenamed), 1)]
+		[TestFixture(typeof(IComposite), 3)]
+		[TestFixture(typeof(IRestaurant), 1)]
+		[TestFixture(typeof(IRestaurantv2), 1)]
+		class GetDBusIntefaceHierarchiesTests {
+			readonly Type type;
+			readonly int expected;
+			public GetDBusIntefaceHierarchiesTests (Type type, int expected)
+			{
+				this.type = type;
+				this.expected = expected;
+			}
+
+			[Test]
+			public void Test ()
+			{
+				var got = Mapper.GetDBusInterfaceHierarchies (type);
+
+				Assert.AreEqual (expected, got.Count ());
+			}
+		}
+
+		interface IFoo { }
+
+		class BadClass : Test, IFoo { }
+
+		interface IBase { }
+
+		interface IDerived : IBase { }
+
+		[Interface(DerivedMoreInterfaceName)]
+		interface IDerivedMore : IDerived { }
+
+		[Interface(DerivedRenamedInterfaceName)]
+		interface IDerivedRenamed : IDerived { }
+
+		[Interface(OtherInterfaceName)]
+		interface IOther { }
+
+		interface IComposite : IDerivedMore, IDerivedRenamed, IOther { }
+
+		const string DerivedInterfaceName = "org.dbussharp.test";
+		const string DerivedMoreInterfaceName = "org.dbussharp.test.more";
+		const string DerivedRenamedInterfaceName = "org.dbussharp.test.renamed";
+		const string OtherInterfaceName = "org.dbussharp.test.other";
 	}
 }
 

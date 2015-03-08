@@ -6,6 +6,7 @@
 *.pidb
 *.user
 *.userprefs
+packages/
 bin/
 obj/
 dbus-sharp-2.0.pc
