@@ -38,10 +38,12 @@ namespace DBus
 	internal class DBusMemberTable {
 
 		public Type ObjectType { get; private set; }
+		public InterfaceTree Interfaces { get; private set; }
 
 		public DBusMemberTable(Type type)
 		{
 			ObjectType = type;
+			Interfaces = new InterfaceTree (ObjectType);
 		}
 
 		InterfaceMethods Methods = new InterfaceMethods();
@@ -54,11 +56,14 @@ namespace DBus
 				iface,
 				name,
 				(i, n) => {
-					Type it = Mapper.GetInterfaceType (ObjectType, i);
-					MethodInfo mi = it
-						.Append(it.GetInterfaces())
+					var tree = Interfaces.Where (x => i == Mapper.GetInterfaceName (x)).FirstOrDefault();
+
+					if (null == tree) return null;
+
+					MethodInfo mi = tree.Types
 						.Select(x => x.GetMethod (n))
 						.FirstOrDefault (method => null != method);
+
 					return TypeImplementer.GenMethodCall (mi);
 				}
 			);
@@ -86,11 +91,14 @@ namespace DBus
 				iface,
 				name,
 				(i, n) => {
-					Type it = Mapper.GetInterfaceType(ObjectType, i);
-					PropertyInfo pi = it
-						.Append(it.GetInterfaces())
+					var tree = Interfaces.Where (x => i == Mapper.GetInterfaceName (x)).FirstOrDefault();
+
+					if (null == tree) return null;
+
+					PropertyInfo pi = tree.Types
 						.Select (x => x.GetProperty(n))
 						.FirstOrDefault (property => null != property);
+
 					return TypeImplementer.GenPropertyCall (pi);
 				}
 			);
