@@ -46,6 +46,11 @@ namespace DBus
 			return GetHierarchy (type, false);
 		}
 
+		internal static IEnumerable<T> Append <T> (this T head, IEnumerable<T> tail)
+		{
+			return new [] { head }.Concat (tail);
+		}
+
 		internal static IEnumerable<T> WhereAll<T>(this IEnumerable<T> sequence, Func<T, T, bool> filterFunc) where T : class
 		{
 			return sequence.Where (x => sequence.All (y => x == y || filterFunc(x, y)));

@@ -55,7 +55,10 @@ namespace DBus
 				name,
 				(i, n) => {
 					Type it = Mapper.GetInterfaceType (ObjectType, i);
-					MethodInfo mi = it.GetMethod (n);
+					MethodInfo mi = it
+						.Append(it.GetInterfaces())
+						.Select(x => x.GetMethod (n))
+						.FirstOrDefault (method => null != method);
 					return TypeImplementer.GenMethodCall (mi);
 				}
 			);
@@ -84,7 +87,10 @@ namespace DBus
 				name,
 				(i, n) => {
 					Type it = Mapper.GetInterfaceType(ObjectType, i);
-					PropertyInfo pi = it.GetProperty(n);
+					PropertyInfo pi = it
+						.Append(it.GetInterfaces())
+						.Select (x => x.GetProperty(n))
+						.FirstOrDefault (property => null != property);
 					return TypeImplementer.GenPropertyCall (pi);
 				}
 			);
