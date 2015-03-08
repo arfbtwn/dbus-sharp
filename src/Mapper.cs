@@ -53,23 +53,19 @@ namespace DBus
 
 		internal static IEnumerable<Type> GetHierarchy(Type type, bool includeInterfaces)
 		{
-			if (null == type) {
+			if (null == type || typeof(object) == type || typeof(MarshalByRefObject) == type) {
 				yield break;
 			}
 
-			if (IsPublic (type)) {
-				yield return type;
+			yield return type;
+
+			foreach (var super in GetHierarchy (type.BaseType, false)) {
+				yield return super;
 			}
 
 			if (includeInterfaces) {
 				foreach (var @interface in type.GetInterfaces ()) {
 					yield return @interface;
-				}
-			}
-
-			foreach (var super in GetHierarchy (type.BaseType, false)) {
-				if (IsPublic (type)) {
-					yield return super;
 				}
 			}
 		}
