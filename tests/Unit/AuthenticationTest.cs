@@ -8,7 +8,7 @@ using NUnit.Framework;
 using DBus;
 using DBus.Authentication;
 
-namespace DBus.Tests
+namespace DBus.Tests.Unit
 {
 	[TestFixture]
 	public class AuthenticationTest

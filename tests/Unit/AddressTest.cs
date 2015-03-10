@@ -7,7 +7,7 @@ using NUnit.Framework;
 using DBus;
 using System.Collections.Generic;
 
-namespace DBus.Tests
+namespace DBus.Tests.Unit
 {
 	[TestFixture]
 	public class AddressTest

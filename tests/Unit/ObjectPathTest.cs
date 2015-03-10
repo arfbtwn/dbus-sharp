@@ -7,7 +7,7 @@ using System;
 using NUnit.Framework;
 using DBus;
 
-namespace DBus.Tests
+namespace DBus.Tests.Unit
 {
 	[TestFixture]
 	public class ObjectPathTest

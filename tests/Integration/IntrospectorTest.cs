@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 using org.freedesktop.DBus;
 
-namespace DBus.Tests
+namespace DBus.Tests.Integration
 {
 	[TestFixture]
 	public class IntrospectorTest

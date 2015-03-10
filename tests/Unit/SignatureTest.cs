@@ -10,7 +10,7 @@ using NUnit.Framework;
 using DBus;
 using DBus.Protocol;
 
-namespace DBus.Tests
+namespace DBus.Tests.Unit
 {
 	[TestFixture]
 	public class SignatureTest

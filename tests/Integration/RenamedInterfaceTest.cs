@@ -7,7 +7,7 @@ using NUnit.Framework;
 using DBus;
 using org.freedesktop.DBus;
 
-namespace DBus.Tests
+namespace DBus.Tests.Integration
 {
 	[TestFixture]
 	public class RenamedInterfaceTest

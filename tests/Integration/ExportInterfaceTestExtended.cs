@@ -5,7 +5,7 @@ using org.freedesktop.DBus;
 
 using NUnit.Framework;
 
-namespace DBus.Tests
+namespace DBus.Tests.Integration
 {
 	[TestFixture]
 	public class ExportInterfaceTestExtended

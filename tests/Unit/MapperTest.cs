@@ -4,9 +4,11 @@ using System.Reflection;
 
 using DBus;
 
+using DBus.Tests.Integration; // FIXME
+
 using NUnit.Framework;
 
-namespace DBus.Tests
+namespace DBus.Tests.Unit
 {
 	[TestFixture]
 	public class MapperTest

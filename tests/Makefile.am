@@ -5,17 +5,17 @@ XBUILD_Q = $(XBUILD) /nologo /verbosity:quiet
 NUNIT_CONSOLE = $$(echo $$(which nunit-console2 || which nunit-console))
 RUNNER = $(NUNIT_CONSOLE) -nologo
 
-CSFILES = AddressTest.cs \
-	AuthenticationTest.cs \
-	MatchRuleTest.cs \
-	ObjectPathTest.cs \
-	SignatureTest.cs \
-	BusTests.cs \
-	ExportInterfaceTest.cs \
-	RenamedInterfaceTest.cs \
-	MessageReaderTest.cs \
-	MessageWriterTest.cs \
-	IntrospectorTest.cs
+CSFILES = Unit/AddressTest.cs \
+	Unit/AuthenticationTest.cs \
+	Unit/MatchRuleTest.cs \
+	Unit/ObjectPathTest.cs \
+	Unit/SignatureTest.cs \
+	Unit/BusTests.cs \
+	Integration/ExportInterfaceTest.cs \
+	Integration/RenamedInterfaceTest.cs \
+	Unit/MessageReaderTest.cs \
+	Unit/MessageWriterTest.cs \
+	Integration/IntrospectorTest.cs
 
 if ENABLE_TESTS
 

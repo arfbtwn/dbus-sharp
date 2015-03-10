@@ -44,20 +44,20 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <Compile Include="AddressTest.cs" />
-    <Compile Include="AuthenticationTest.cs" />
-    <Compile Include="MatchRuleTest.cs" />
-    <Compile Include="ObjectPathTest.cs" />
-    <Compile Include="SignatureTest.cs" />
-    <Compile Include="BusTests.cs" />
-    <Compile Include="ExportInterfaceTest.cs" />
-    <Compile Include="RenamedInterfaceTest.cs" />
-    <Compile Include="MessageReaderTest.cs" />
-    <Compile Include="MessageWriterTest.cs" />
-    <Compile Include="IntrospectorTest.cs" />
-    <Compile Include="MarshalByRefObjectTest.cs" />
-    <Compile Include="MapperTest.cs" />
-    <Compile Include="ExportInterfaceTestExtended.cs" />
+    <Compile Include="Integration\ExportInterfaceTest.cs" />
+    <Compile Include="Integration\ExportInterfaceTestExtended.cs" />
+    <Compile Include="Integration\IntrospectorTest.cs" />
+    <Compile Include="Integration\MarshalByRefObjectTest.cs" />
+    <Compile Include="Integration\RenamedInterfaceTest.cs" />
+    <Compile Include="Unit\AddressTest.cs" />
+    <Compile Include="Unit\AuthenticationTest.cs" />
+    <Compile Include="Unit\BusTests.cs" />
+    <Compile Include="Unit\MapperTest.cs" />
+    <Compile Include="Unit\MatchRuleTest.cs" />
+    <Compile Include="Unit\MessageReaderTest.cs" />
+    <Compile Include="Unit\MessageWriterTest.cs" />
+    <Compile Include="Unit\ObjectPathTest.cs" />
+    <Compile Include="Unit\SignatureTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\src\dbus-sharp.csproj">
@@ -67,5 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Unit\" />
+    <Folder Include="Integration\" />
   </ItemGroup>
 </Project>
