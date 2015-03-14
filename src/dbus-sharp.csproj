@@ -84,6 +84,9 @@
     <Compile Include="Unix\UnixSocket.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Data Structures\InterfaceTree.cs" />
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>SharedAssemblyInfo.cs</Link>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

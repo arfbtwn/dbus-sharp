@@ -5,4 +5,4 @@
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-[assembly: AssemblyTitle ("dbus-sharp")]
+[assembly: AssemblyTitle ("dbus-daemon")]

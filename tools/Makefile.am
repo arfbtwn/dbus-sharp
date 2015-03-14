@@ -3,7 +3,6 @@ TARGET = $(ASSEMBLY).exe
 XBUILD_Q = $(XBUILD) /nologo /verbosity:quiet
 
 CSFILES = \
-	Introspect.cs \
 	Monitor.cs
 
 all: $(TARGET)
