@@ -12,6 +12,8 @@ obj/
 dbus-sharp-2.0.pc
 Makefile
 Makefile.in
+Makefile.include
+Makefile.include.in
 SharedAssemblyInfo.cs
 aclocal.m4
 autom4te.cache/
