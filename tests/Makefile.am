@@ -18,11 +18,11 @@ CSFILES = Unit/AddressTest.cs \
 
 if ENABLE_TESTS
 
-test: $(TARGET)
+test: all
 	if test -z "$$DBUS_SESSION_BUS_ADDRESS" ; then \
 		eval `dbus-launch --sh-syntax` ; \
 		echo "D-Bus per-session daemon address is: $$DBUS_SESSION_BUS_ADDRESS" ; \
-	fi; $(RUNNER) $$TEST_HARNESS_FLAGS $(TARGET);
+	fi; $(RUNNER) $$TEST_HARNESS_FLAGS $(TARGETPATH);
 
 check: test
 

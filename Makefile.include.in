@@ -1,9 +1,10 @@
-CONFIG = Debug
+CONFIG = @CONFIGURATION@
+TARGETPATH = bin/$(CONFIG)/$(TARGET)
 XBUILD_Q = $(XBUILD) /p:Configuration=$(CONFIG) /nologo /verbosity:quiet
 
-all: $(TARGET)
+all: $(TARGETPATH)
 
-$(TARGET): $(CSFILES)
+$(TARGETPATH): $(CSFILES)
 	$(XBUILD_Q) /target:Build $(ASSEMBLY).csproj
 
 clean:
@@ -14,15 +15,13 @@ clean:
 setup: ;
 run: check
 
-.PHONY: $(TARGET)
-
 EXTRA_DIST = \
 	$(CSFILES) \
 	$(ASSEMBLY).csproj
 
 CLEANFILES = \
-	$(TARGET) \
-	$(TARGET).mdb
+	$(TARGETPATH) \
+	$(TARGETPATH).mdb
 
 MAINTAINERCLEANFILES = \
 	Makefile.in

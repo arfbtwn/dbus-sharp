@@ -55,6 +55,15 @@ done
 
 NUNIT_REQUIRED=2.4.7
 
+AC_ARG_ENABLE(release, AC_HELP_STRING([--enable-release], [Set Configuration=Release when building]),
+    enable_release=$enableval, enable_release="no")
+
+if test "x$enable_release" = "xno"; then
+    AC_SUBST([CONFIGURATION], [Debug])
+else
+    AC_SUBST([CONFIGURATION], [Release])
+fi
+
 AC_ARG_ENABLE(tests, AC_HELP_STRING([--enable-tests], [Enable NUnit tests]),
 	enable_tests=$enableval, enable_tests="no")
 
@@ -83,6 +92,7 @@ fi
 
 AC_OUTPUT([
 Makefile
+Makefile.include
 dbus-sharp-2.0.pc
 SharedAssemblyInfo.cs
 src/Makefile
