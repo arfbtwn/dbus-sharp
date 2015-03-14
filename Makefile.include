@@ -1,0 +1,28 @@
+CONFIG = Debug
+XBUILD_Q = $(XBUILD) /p:Configuration=$(CONFIG) /nologo /verbosity:quiet
+
+all: $(TARGET)
+
+$(TARGET): $(CSFILES)
+	$(XBUILD_Q) /target:Build $(ASSEMBLY).csproj
+
+clean:
+	$(XBUILD_Q) /target:Clean $(ASSEMBLY).csproj
+
+# This is not needed on that branch
+# it's for compat with wrench
+setup: ;
+run: check
+
+.PHONY: $(TARGET)
+
+EXTRA_DIST = \
+	$(CSFILES) \
+	$(ASSEMBLY).csproj
+
+CLEANFILES = \
+	$(TARGET) \
+	$(TARGET).mdb
+
+MAINTAINERCLEANFILES = \
+	Makefile.in

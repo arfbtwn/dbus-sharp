@@ -1,6 +1,5 @@
 ASSEMBLY = dbus-sharp-tests
 TARGET = $(ASSEMBLY).dll
-XBUILD_Q = $(XBUILD) /nologo /verbosity:quiet
 
 NUNIT_CONSOLE = $$(echo $$(which nunit-console2 || which nunit-console))
 RUNNER = $(NUNIT_CONSOLE) -nologo
@@ -19,14 +18,6 @@ CSFILES = Unit/AddressTest.cs \
 
 if ENABLE_TESTS
 
-all: $(TARGET)
-
-$(TARGET): $(CSFILES)
-	$(XBUILD_Q) $(ASSEMBLY).csproj
-
-clean:
-	$(XBUILD_Q) /target:Clean $(ASSEMBLY).csproj
-
 test: $(TARGET)
 	if test -z "$$DBUS_SESSION_BUS_ADDRESS" ; then \
 		eval `dbus-launch --sh-syntax` ; \
@@ -35,22 +26,7 @@ test: $(TARGET)
 
 check: test
 
-# This is not needed on that branch
-# it's for compat with wrench
-setup: ;
-run: check
-
-.PHONY: $(TARGET)
+include ../Makefile.include
 
 endif
 
-EXTRA_DIST = \
-	$(CSFILES) \
-	dbus-sharp-tests.csproj
-
-CLEANFILES = \
-	$(TARGET) \
-	$(TARGET).mdb
-
-MAINTAINERCLEANFILES = \
-	Makefile.in

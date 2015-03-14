@@ -1,6 +1,5 @@
 ASSEMBLY = dbus-sharp
 TARGET = $(ASSEMBLY).dll
-XBUILD_Q = $(XBUILD) /nologo /verbosity:quiet
 
 # Use the gencssources script to generate this list
 CSFILES = Address.cs \
@@ -45,14 +44,6 @@ CSFILES = Address.cs \
 	Unix/UnixSocket.cs \
 	AssemblyInfo.cs
 
-all: $(TARGET)
-
-$(TARGET): $(CSFILES)
-	$(XBUILD_Q) $(ASSEMBLY).csproj
-
-clean:
-	$(XBUILD_Q) /target:Clean $(ASSEMBLY).csproj
-
 install-data-local: $(TARGET)
 	@if test -n '$(TARGET)'; then                       \
           echo "$(GACUTIL) /i $(TARGET) /package $(PACKAGE)-$(API_VERSION) /f /gacdir $(libdir) /root $(DESTDIR)$(libdir)";    \
@@ -65,16 +56,7 @@ uninstall-local:
           $(GACUTIL) /u $(ASSEMBLY) /package $(PACKAGE)-$(API_VERSION) /gacdir $(libdir) /root $(DESTDIR)$(libdir) || exit 1;   \
         fi
 
-.PHONY: $(TARGET)
+include ../Makefile.include
 
-EXTRA_DIST = \
-	$(CSFILES) \
-	$(srcdir)/dbus-sharp.dll.config \
-	$(srcdir)/dbus-sharp.csproj
-
-CLEANFILES = \
-	$(TARGET) \
-	$(TARGET).mdb
-
-MAINTAINERCLEANFILES = \
-	Makefile.in
+EXTRA_DIST += \
+	$(srcdir)/dbus-sharp.dll.config
