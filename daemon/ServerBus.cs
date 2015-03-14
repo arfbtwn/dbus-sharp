@@ -11,6 +11,7 @@ using System.IO;
 using System.Threading;
 
 using DBus.Transports;
+using DBus.Protocol;
 using org.freedesktop.DBus;
 
 namespace DBus
@@ -233,12 +234,17 @@ namespace DBus
 			// Name* signals on org.freedesktop.DBus are connection-specific.
 			// We handle them here as a special case.
 
-			Signal nameSignal = new Signal (Path, DBusInterface, "Name" + memberSuffix);
+			var nameSignal = new MessageContainer {
+				Type = MessageType.Signal,
+				Signature = Signature.StringSig,
+				Path = Path,
+				Interface = DBusInterface,
+				Member = "Name" + memberSuffix,
+			}.Message;
 			MessageWriter mw = new MessageWriter ();
 			mw.Write (name);
-			nameSignal.message.Body = mw.ToArray ();
-			nameSignal.message.Signature = Signature.StringSig;
-			Caller.Send (nameSignal.message);
+			nameSignal.AttachBodyTo (mw);
+			Caller.Send (nameSignal);
 		}
 
 		public string[] ListNames ()
@@ -353,7 +359,7 @@ namespace DBus
 					// Send an error when there's no hope of getting the requested reply
 					if (msg.ReplyExpected) {
 						// Error org.freedesktop.DBus.Error.ServiceUnknown: The name {0} was not provided by any .service files
-						Message rmsg = MessageHelper.CreateUnknownMethodError (new MethodCall (msg));
+						Message rmsg = MessageHelper.CreateUnknownMethodError (MessageContainer.FromMessage(msg));
 						if (rmsg != null) {
 							//Caller.Send (rmsg);
 							Caller.SendReal (rmsg);
@@ -435,7 +441,7 @@ namespace DBus
 
 		public string GetId ()
 		{
-			return Caller.Id.ToString ();
+			return Caller.Server.Id.ToString();
 		}
 
 		// Undocumented in spec
@@ -568,12 +574,12 @@ namespace DBus
 
 		override internal void HandleMessage (Message msg)
 		{
-			if (!isConnected)
+			if (!IsConnected)
 				return;
 
 			if (msg == null) {
 				Console.Error.WriteLine ("Disconnected!");
-				isConnected = false;
+				IsConnected = false;
 				//Server.Bus.RemoveConnection (this);
 				//ServerBus sbus = Unregister (new ObjectPath ("/org/freedesktop/DBus")) as ServerBus;
 
@@ -606,7 +612,7 @@ namespace DBus
 					if ((string)fieldValue == ServerBus.DBusBusName) {
 
 						// Workaround for our daemon only listening on a single path
-						if (msg.Header.MessageType == DBus.MessageType.MethodCall)
+						if (msg.Header.MessageType == MessageType.MethodCall)
 							msg.Header[FieldCode.Path] = ServerBus.Path;
 
 						base.HandleMessage (msg);
@@ -624,7 +630,7 @@ namespace DBus
 
 		override internal uint Send (Message msg)
 		{
-			if (!isConnected)
+			if (!IsConnected)
 				return 0;
 
 			/*
@@ -638,7 +644,7 @@ namespace DBus
 			}
 			*/
 
-			if (msg.Header.MessageType != DBus.MessageType.MethodReturn) {
+			if (msg.Header.MessageType != MessageType.MethodReturn) {
 				msg.Header[FieldCode.Sender] = ServerBus.DBusBusName;
 			}
 
@@ -656,14 +662,14 @@ namespace DBus
 
 		internal uint SendReal (Message msg)
 		{
-			if (!isConnected)
+			if (!IsConnected)
 				return 0;
 
 			try {
 				return base.Send (msg);
 			} catch {
 				//} catch (System.IO.IOException) {
-				isConnected = false;
+				IsConnected = false;
 				Server.SBus.RemoveConnection (this);
 			}
 			return 0;
@@ -708,7 +714,7 @@ namespace DBus
 			: base (ServerBus.DBusInterface + ".Error." + errorNameSuffix, format, args)
 		{
 			// Note: This won't log ArgumentExceptions which are used in some places.
-			if (Protocol.Verbose)
+			if (ProtocolInformation.Verbose)
 				Console.Error.WriteLine (Message);
 		}
 	}

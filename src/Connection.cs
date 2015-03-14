@@ -27,7 +27,7 @@ namespace DBus
 		Transport transport;
 		bool isConnected = false;
 		bool isShared = false;
-		UUID Id = UUID.Zero;
+		UUID id = UUID.Zero;
 		bool isAuthenticated = false;
 		int serial = 0;
 
@@ -58,6 +58,11 @@ namespace DBus
 			Authenticate ();
 		}
 
+		public string Id {
+			get { return id.ToString (); }
+			set { id = UUID.Parse (value); }
+		}
+
 		public bool IsConnected {
 			get {
 				return isConnected;
@@ -70,6 +75,9 @@ namespace DBus
 		internal bool IsAuthenticated {
 			get {
 				return isAuthenticated;
+			}
+			set {
+				isAuthenticated = value;
 			}
 		}
 
@@ -124,7 +132,7 @@ namespace DBus
 			while (index < entries.Length) {
 				AddressEntry entry = entries[index++];
 
-				Id = entry.GUID;
+				id = entry.GUID;
 				try {
 					Transport = Transport.Create (entry);
 				} catch {
@@ -154,12 +162,12 @@ namespace DBus
 			if (!auth.Authenticate ())
 				throw new Exception ("Authentication failure");
 
-			if (Id != UUID.Zero)
-				if (auth.ActualId != Id)
+			if (id != UUID.Zero)
+				if (auth.ActualId != id)
 					throw new Exception ("Authentication failure: Unexpected GUID");
 
-			if (Id == UUID.Zero)
-				Id = auth.ActualId;
+			if (id == UUID.Zero)
+				id = auth.ActualId;
 
 			isAuthenticated = true;
 		}

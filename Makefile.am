@@ -1,4 +1,4 @@
-SUBDIRS = src tools examples tests
+SUBDIRS = src daemon tools examples tests
 
 test:
 if ENABLE_TESTS

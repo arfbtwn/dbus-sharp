@@ -17,6 +17,7 @@ namespace DBus
 	using Unix;
 	using Transports;
 	using Authentication;
+	using Protocol;
 
 	//TODO: complete this class
 	abstract class Server
@@ -39,7 +40,7 @@ namespace DBus
 #endif
 					}
 				} catch (Exception e) {
-					if (Protocol.Verbose)
+					if (ProtocolInformation.Verbose)
 						Console.Error.WriteLine (e.Message);
 				}
 			}
@@ -145,12 +146,11 @@ namespace DBus
 			//ServerConnection conn = new ServerConnection (transport);
 			conn = new ServerConnection (transport);
 			conn.Server = this;
-			conn.Id = Id;
 
 			if (conn.Transport.Stream.ReadByte () != 0)
 				return false;
 
-			conn.isConnected = true;
+			conn.IsConnected = true;
 
 			SaslPeer remote = new SaslPeer ();
 			remote.stream = transport.Stream;
@@ -170,7 +170,7 @@ namespace DBus
 
 			conn.UserId = ((SaslServer)local).uid;
 
-			conn.isAuthenticated = true;
+			conn.IsAuthenticated = true;
 
 			return true;
 		}
@@ -275,12 +275,11 @@ namespace DBus
 			//ServerConnection conn = new ServerConnection (transport);
 			conn = new ServerConnection (transport);
 			conn.Server = this;
-			conn.Id = Id;
 
 			if (conn.Transport.Stream.ReadByte () != 0)
 				return false;
 
-			conn.isConnected = true;
+			conn.IsConnected = true;
 
 			SaslPeer remote = new SaslPeer ();
 			remote.stream = transport.Stream;
@@ -300,7 +299,7 @@ namespace DBus
 
 			conn.UserId = ((SaslServer)local).uid;
 
-			conn.isAuthenticated = true;
+			conn.IsAuthenticated = true;
 
 			return true;
 		}

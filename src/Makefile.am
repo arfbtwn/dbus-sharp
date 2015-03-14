@@ -47,8 +47,11 @@ CSFILES = Address.cs \
 
 all: $(TARGET)
 
-$(TARGET): $(CSFILES) AssemblyInfo.cs
-	$(XBUILD_Q) dbus-sharp.csproj
+$(TARGET): $(CSFILES)
+	$(XBUILD_Q) $(ASSEMBLY).csproj
+
+clean:
+	$(XBUILD_Q) /target:Clean $(ASSEMBLY).csproj
 
 install-data-local: $(TARGET)
 	@if test -n '$(TARGET)'; then                       \

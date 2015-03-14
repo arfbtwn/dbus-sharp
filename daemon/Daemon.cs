@@ -87,7 +87,7 @@ public class DBusDaemon
 						intro.WriteType (typeof (org.freedesktop.DBus.IBus));
 						intro.WriteEnd ();
 
-						Console.WriteLine (intro.xml);
+						Console.WriteLine (intro.Xml);
 					}
 					return;
 				default:

@@ -86,6 +86,7 @@ Makefile
 dbus-sharp-2.0.pc
 src/AssemblyInfo.cs
 src/Makefile
+daemon/Makefile
 tools/Makefile
 examples/Makefile
 tests/Makefile

@@ -7,6 +7,7 @@ using System.Text;
 using System.IO;
 using System.Collections.Generic;
 using DBus;
+using DBus.Protocol;
 using org.freedesktop.DBus;
 
 class BusMonitor

@@ -18,31 +18,31 @@ namespace DBus.Protocol
 		public uint Length;
 		public uint Serial;
 
-		Dictionary<byte, object> fields = new Dictionary<byte, object> ();
+		public readonly Dictionary<byte, object> Fields = new Dictionary<byte, object> ();
 
 		public object this[FieldCode key]
 		{
 			get {
 				object value = null;
-				fields.TryGetValue ((byte)key, out value);
+				Fields.TryGetValue ((byte)key, out value);
 				return value;
 			}
 			set {
 				if (value == null)
-					fields.Remove((byte)key);
+					Fields.Remove((byte)key);
 				else
-					fields[(byte)key] = value;
+					Fields[(byte)key] = value;
 			}
 		}
 
 		public bool TryGetField (FieldCode code, out object value)
 		{
-			return fields.TryGetValue ((byte)code, out value);
+			return Fields.TryGetValue ((byte)code, out value);
 		}
 
 		public int FieldsCount {
 			get {
-				return fields.Count;
+				return Fields.Count;
 			}
 		}
 
@@ -84,7 +84,7 @@ namespace DBus.Protocol
 			writer.Write (MajorVersion);
 			writer.Write (Length);
 			writer.Write (Serial);
-			writer.WriteHeaderFields (fields);
+			writer.WriteHeaderFields (Fields);
 
 			writer.CloseWrite ();
 		}

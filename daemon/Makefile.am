@@ -1,14 +1,15 @@
-ASSEMBLY = dbus-monitor
+ASSEMBLY = dbus-daemon
 TARGET = $(ASSEMBLY).exe
 XBUILD_Q = $(XBUILD) /nologo /verbosity:quiet
 
 CSFILES = \
-	Introspect.cs \
-	Monitor.cs
+	Server.cs \
+	ServerBus.cs \
+	Daemon.cs
 
 all: $(TARGET)
 
-$(TARGET): $(CSFILES)
+$(TARGET):
 	$(XBUILD_Q) $(ASSEMBLY).csproj
 
 clean:

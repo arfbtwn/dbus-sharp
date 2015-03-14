@@ -21,8 +21,11 @@ if ENABLE_TESTS
 
 all: $(TARGET)
 
-$(TARGET):
-	$(XBUILD_Q) dbus-sharp-tests.csproj
+$(TARGET): $(CSFILES)
+	$(XBUILD_Q) $(ASSEMBLY).csproj
+
+clean:
+	$(XBUILD_Q) /target:Clean $(ASSEMBLY).csproj
 
 test: $(TARGET)
 	if test -z "$$DBUS_SESSION_BUS_ADDRESS" ; then \
