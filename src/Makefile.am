@@ -56,7 +56,7 @@ uninstall-local:
           $(GACUTIL) /u $(ASSEMBLY) /package $(PACKAGE)-$(API_VERSION) /gacdir $(libdir) /root $(DESTDIR)$(libdir) || exit 1;   \
         fi
 
-include ../Makefile.include
+include $(top_srcdir)/Makefile.include.am
 
 EXTRA_DIST += \
 	$(srcdir)/dbus-sharp.dll.config

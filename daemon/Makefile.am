@@ -6,4 +6,4 @@ CSFILES = \
 	ServerBus.cs \
 	Daemon.cs
 
-include ../Makefile.include
+include $(top_srcdir)/Makefile.include.am

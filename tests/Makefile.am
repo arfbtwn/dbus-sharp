@@ -26,7 +26,7 @@ test: all
 
 check: test
 
-include ../Makefile.include
+include $(top_srcdir)/Makefile.include.am
 
 endif
 

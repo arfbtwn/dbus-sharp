@@ -23,6 +23,7 @@ DISTCLEANFILES = \
 MAINTAINERCLEANFILES = \
 	INSTALL \
 	Makefile.in \
+	Makefile.include.in \
 	aclocal.m4 \
 	config.guess \
 	config.sub \

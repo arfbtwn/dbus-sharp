@@ -4,4 +4,4 @@ TARGET = $(ASSEMBLY).exe
 CSFILES = \
 	Monitor.cs
 
-include ../Makefile.include
+include $(top_srcdir)/Makefile.include.am
