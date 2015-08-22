@@ -426,6 +426,7 @@ namespace DBus
 			return (T)GetObject (typeof (T), bus_name, path);
 		}
 
+		[Obsolete]
 		protected virtual bool CheckBusNameExists (string busName)
 		{
 			return true;

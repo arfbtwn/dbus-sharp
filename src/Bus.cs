@@ -94,13 +94,6 @@ namespace DBus
 				buses.Remove (address);
 		}
 
-		protected override bool CheckBusNameExists (string busName)
-		{
-			if (busName == DBusName)
-				return true;
-			return NameHasOwner (busName);
-		}
-
 		public ulong GetUnixUser (string name)
 		{
 			return bus.GetConnectionUnixUser (name);
