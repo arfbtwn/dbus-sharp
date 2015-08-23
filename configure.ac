@@ -36,7 +36,7 @@ fi
 AC_SUBST(GACUTIL)
 
 AC_PATH_PROG(XBUILD, xbuild, no)
-if test "x$GACUTIL" = "xno"; then
+if test "x$XBUILD" = "xno"; then
 	AC_MSG_ERROR([You need to install xbuild])
 fi
 AC_SUBST(XBUILD)
