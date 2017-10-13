@@ -98,14 +98,14 @@ namespace DBus.Tests
 			Assert.AreEqual (3, stct.Item3);
 		}
 
-		[Test, ExpectedException (typeof (MessageReader.PaddingException))]
+		[Test]
 		public void ReadIntLongIntStructNonAlignedLittleEndian ()
 		{
 			// (ixi) and (1, 2, 3)
 			byte[] data = new byte[] { 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0 };
 			MessageReader reader = new MessageReader (EndianFlag.Little, data);
 
-			TestStruct stct = (TestStruct)reader.ReadStruct (typeof (TestStruct));
+			Assert.Throws<MessageReader.PaddingException>(() => reader.ReadStruct (typeof (TestStruct)));
 		}
 
 		[StructLayout (LayoutKind.Sequential)]

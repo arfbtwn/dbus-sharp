@@ -81,11 +81,10 @@ namespace DBus.Tests
 		}
 
 		[Test]
-		[ExpectedException]
 		public void ParseArgsMoreThanAllowed ()
 		{
 			string ruleText = @"arg64='Foo'";
-			MatchRule.Parse (ruleText);
+			Assert.Throws<Exception>(() => MatchRule.Parse(ruleText));
 		}
 
 		[Test]

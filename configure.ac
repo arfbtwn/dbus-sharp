@@ -4,6 +4,7 @@ m4_define([lib_version], [0.9])
 AC_PREREQ(2.13)
 
 AC_INIT([dbus-sharp], lib_version)
+AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_SRCDIR([src/DBus.cs])
 AM_INIT_AUTOMAKE
 
@@ -21,25 +22,10 @@ fi
 AC_SUBST(PKG_CONFIG)
 
 MONO_REQ_VERSION=1.1.13
-PKG_CHECK_MODULES(MONO, mono >= $MONO_REQ_VERSION)
-
-AC_PATH_PROG(MCS, mcs, no)
-if test "x$MCS" = "xno"; then
-	AC_MSG_ERROR([You need to install mcs])
-fi
-AC_SUBST(MCS)
-
-AC_PATH_PROG(GACUTIL, gacutil, no)
-if test "x$GACUTIL" = "xno"; then
-	AC_MSG_ERROR([You need to install gacutil])
-fi
-AC_SUBST(GACUTIL)
-
-AC_PATH_PROG(XBUILD, xbuild, no)
-if test "x$GACUTIL" = "xno"; then
-	AC_MSG_ERROR([You need to install xbuild])
-fi
-AC_SUBST(XBUILD)
+MONO_INIT([mono >= ${MONO_REQ_VERSION}])
+MONO_INIT_XBUILD
+MONO_INIT_GACUTIL
+NUGET_INIT
 
 required_assemblies="Mono.Posix"
 
@@ -53,7 +39,7 @@ for asm in $required_assemblies; do
 	fi
 done
 
-NUNIT_REQUIRED=2.4.7
+NUNIT_REQUIRED=2.6.4
 
 AC_ARG_ENABLE(tests, AC_HELP_STRING([--enable-tests], [Enable NUnit tests]),
 	enable_tests=$enableval, enable_tests="no")
@@ -62,23 +48,14 @@ if test "x$enable_tests" = "xno"; then
 	do_tests=no
 	AM_CONDITIONAL(ENABLE_TESTS, false)
 else
-	PKG_CHECK_MODULES(NUNIT, nunit >= $NUNIT_REQUIRED,
-		do_tests="yes", do_tests="no")
+	NUGET_INSTALL([NUnit],[${NUNIT_REQUIRED}],[do_tests="yes"])
+	NUGET_INSTALL([NUnit.ConsoleRunner],[3.7.0])
+	NUGET_INSTALL([NUnit.Extension.NUnitV2Driver],[3.7.0])
 
-	AC_SUBST(NUNIT_LIBS)
+	MONO_PROG([RUNNER],[${NUGET_DIR}NUnit.ConsoleRunner.3.7.0/tools/nunit3-console.exe])
+	AC_SUBST([RUNNER])
+
 	AM_CONDITIONAL(ENABLE_TESTS, test "x$do_tests" = "xyes")
-
-	if test "x$do_tests" = "xno"; then
-		PKG_CHECK_MODULES(NUNIT, mono-nunit >= 2.4,
-			do_tests="yes", do_tests="no")
-
-		AC_SUBST(NUNIT_LIBS)
-		AM_CONDITIONAL(ENABLE_TESTS, test "x$do_tests" = "xyes")
-
-		if test "x$do_tests" = "xno"; then
-			AC_MSG_WARN([Could not find nunit: tests will not be available])
-		fi
-	fi
 fi
 
 AC_OUTPUT([

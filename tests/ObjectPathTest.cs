@@ -13,35 +13,31 @@ namespace DBus.Tests
 	public class ObjectPathTest
 	{
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void InvalidStartingCharacter ()
 		{
 			// Paths must start with "/"
-			new ObjectPath ("no_starting_slash");
+			Assert.Throws<ArgumentException>(() => new ObjectPath ("no_starting_slash"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void InvalidEndingCharacter ()
 		{
 			// Paths must not end with "/"
-			new ObjectPath ("/ends_with_slash/");
+			Assert.Throws<ArgumentException>(() => new ObjectPath ("/ends_with_slash/"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void MultipleConsecutiveSlash ()
 		{
 			// Paths must not contains consecutive "/"
-			new ObjectPath ("/foo//bar");
+			Assert.Throws<ArgumentException>(() => new ObjectPath ("/foo//bar"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void InvalidCharacters ()
 		{
 			// Paths must be in the range "[A-Z][a-z][0-9]_"
-			new ObjectPath ("/?valid/path/invalid?/character.^");
+			Assert.Throws<ArgumentException>(() => new ObjectPath ("/?valid/path/invalid?/character.^"));
 		}
 
 		[Test]
@@ -73,17 +69,15 @@ namespace DBus.Tests
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void NullConstructor ()
 		{
-			new ObjectPath (null);
+			Assert.Throws<ArgumentNullException>(() => new ObjectPath (null));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void EmptyStringConstructor ()
 		{
-			new ObjectPath ("");
+			Assert.Throws<ArgumentException>(() => new ObjectPath (""));
 		}
 	}
 }

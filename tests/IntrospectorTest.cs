@@ -51,7 +51,7 @@ namespace DBus.Tests
 		}
 
 		const string expectedOutputSimpleInterface = @"<!DOCTYPE node PUBLIC ""-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"" ""http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd"">
-			<!-- dbus-sharp 0.8.1 -->
+			<!-- dbus-sharp 0.9 -->
 				<node>
 				<interface name=""org.freedesktop.DBus.Introspectable"">
 				<method name=""Introspect"">
@@ -77,8 +77,11 @@ namespace DBus.Tests
 			intro.WriteStart ();
 			intro.WriteType (typeof (ObjectIntrospectedImpl));
 			intro.WriteEnd ();
-			Assert.IsTrue (XNode.DeepEquals (XDocument.Parse (expectedOutputSimpleInterface),
-			                                 XDocument.Parse (intro.Xml)));
+
+			var exp = XDocument.Parse(expectedOutputSimpleInterface);
+			var act = XDocument.Parse(intro.Xml);
+
+			Assert.IsTrue(XNode.DeepEquals(exp, act), "Expected: {0}\nGot: {1}", exp, act);
 		}
 
 		[Test]
@@ -92,8 +95,10 @@ namespace DBus.Tests
 			Bus.Session.RequestName (ServiceName);
 			var iface = Bus.Session.GetObject<org.freedesktop.DBus.Introspectable> ("org.dbussharp.testservice", path);
 
-			Assert.IsTrue (XNode.DeepEquals (XDocument.Parse (expectedOutputSimpleInterface),
-			                                 XDocument.Parse (iface.Introspect ())));
+			var exp = XDocument.Parse (expectedOutputSimpleInterface);
+			var act = XDocument.Parse (iface.Introspect ());
+
+			Assert.IsTrue (XNode.DeepEquals (exp, act), "Expected: {0}\nGot: {1}", exp, act);
 		}
 
 		[Test]
@@ -107,7 +112,7 @@ namespace DBus.Tests
 			var doc = XDocument.Parse (xml);
 			Assert.AreEqual ((XName)"node", doc.Root.Name);
 			// the main dbus object has two interfaces, the dbus interface and the introspectable one
-			Assert.AreEqual (2, doc.Root.Elements ("interface").Count ());
+			Assert.AreEqual (3, doc.Root.Elements ("interface").Count ());
 			var iface = doc.Root.Elements ("interface")
 				.FirstOrDefault (e => ((string)e.Attribute ("name")) == "org.freedesktop.DBus.Introspectable");
 			Assert.IsNotNull (iface);

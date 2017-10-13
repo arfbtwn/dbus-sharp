@@ -13,10 +13,9 @@ namespace DBus.Tests
 	public class AddressTest
 	{
 		[Test]
-		[ExpectedException (typeof (InvalidAddressException))]
 		public void ParseBad ()
 		{
-			Address.Parse ("lala");
+			Assert.Throws<InvalidAddressException>(() => Address.Parse ("lala"));
 		}
 
 		[Test]

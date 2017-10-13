@@ -16,17 +16,15 @@ namespace DBus.Tests
 	public class SignatureTest
 	{
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Parse_NullString ()
 		{
-			new Signature ((string) null);
+			Assert.Throws<ArgumentNullException>(() => new Signature((string)null));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentNullException))]
 		public void Parse_NullArray ()
 		{
-			new Signature ((DType []) null);
+			Assert.Throws<ArgumentNullException>(() => new Signature ((DType []) null));
 		}
 
 		[Test]
@@ -49,27 +47,24 @@ namespace DBus.Tests
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void ParseInvalid_TypeCode ()
 		{
 			// Use an invalid type code
-			new Signature ("z");
+			Assert.Throws<ArgumentException>(() => new Signature ("z"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void ParseInvalid_MissingClosingBrace ()
 		{
 			// Use an invalid type code
-			new Signature ("(i");
+			Assert.Throws<ArgumentException>(() => new Signature ("(i"));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void ParseInvalid_MissingOpeningBrace ()
 		{
 			// Use an invalid type code
-			new Signature ("i)");
+			Assert.Throws<ArgumentException>(() => new Signature ("i)"));
 		}
 
 		[Test]
@@ -148,10 +143,9 @@ namespace DBus.Tests
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void MakeArray_NotSingleCompleteType ()
 		{
-			Signature.MakeArray (Signature.Int32Sig + Signature.UInt16Sig);
+			Assert.Throws<ArgumentException>(() => Signature.MakeArray (Signature.Int32Sig + Signature.UInt16Sig));
 		}
 
 		[Test]
@@ -163,10 +157,9 @@ namespace DBus.Tests
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void MakeStruct_Empty ()
 		{
-			Signature.MakeStruct (Signature.Empty);
+			Assert.Throws<ArgumentException>(() => Signature.MakeStruct(Signature.Empty));
 		}
 
 		[Test]
@@ -186,19 +179,17 @@ namespace DBus.Tests
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void MakeDictionary_TwoCompleteTypes_Key ()
 		{
 			// They key is not a single complete type
-			 Signature.MakeDictEntry (Signature.StringSig + Signature.Int32Sig, Signature.Int32Sig);
+			Assert.Throws<ArgumentException>(() => Signature.MakeDictEntry (Signature.StringSig + Signature.Int32Sig, Signature.Int32Sig));
 		}
 
 		[Test]
-		[ExpectedException (typeof (ArgumentException))]
 		public void MakeDictionary_TwoCompleteTypes_Value ()
 		{
 			// They value is not a single complete type
-			Signature.MakeDictEntry (Signature.StringSig, Signature.Int32Sig + Signature.Int32Sig);
+			Assert.Throws<ArgumentException>(() => Signature.MakeDictEntry (Signature.StringSig, Signature.Int32Sig + Signature.Int32Sig));
 		}
 
 		[Test]
