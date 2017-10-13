@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>DBus.Tests</RootNamespace>
     <AssemblyName>dbus-sharp-tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\dbus-sharp.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
