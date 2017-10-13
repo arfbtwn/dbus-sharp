@@ -21,33 +21,33 @@ namespace DBus.Tests
 		{
 			new Signature ((string) null);
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (ArgumentNullException))]
 		public void Parse_NullArray ()
 		{
 			new Signature ((DType []) null);
 		}
-		
+
 		[Test]
 		public void Parse_Empty ()
 		{
 			var x = new Signature ("");
 			Assert.AreEqual (Signature.Empty, x, "#1");
 		}
-		
+
 		[Test]
 		public void ParseStruct ()
 		{
 			var sig = new Signature ("(iu)");
 			Assert.IsTrue (sig.IsStruct, "#1");
-			
+
 			var elements = sig.GetFieldSignatures ().ToArray ();
 			Assert.AreEqual (2, elements.Length, "#2");
 			Assert.AreEqual (Signature.Int32Sig, elements [0], "#3");
 			Assert.AreEqual (Signature.UInt32Sig, elements [1], "#4");
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (ArgumentException))]
 		public void ParseInvalid_TypeCode ()
@@ -55,7 +55,7 @@ namespace DBus.Tests
 			// Use an invalid type code
 			new Signature ("z");
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (ArgumentException))]
 		public void ParseInvalid_MissingClosingBrace ()
@@ -63,7 +63,7 @@ namespace DBus.Tests
 			// Use an invalid type code
 			new Signature ("(i");
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (ArgumentException))]
 		public void ParseInvalid_MissingOpeningBrace ()
@@ -71,7 +71,7 @@ namespace DBus.Tests
 			// Use an invalid type code
 			new Signature ("i)");
 		}
-		
+
 		[Test]
 		public void Parse_ArrayOfString ()
 		{
@@ -116,21 +116,21 @@ namespace DBus.Tests
 			sig = new Signature ("u(uvb)");
 			Assert.IsFalse (sig.IsFixedSize);
 		}
-		
+
 		[Test]
 		public void CombineSignatures ()
 		{
 			var x = Signature.ByteSig + Signature.StringSig;
 			Assert.AreEqual ("ys", x.Value, "#1");
 		}
-		
+
 		[Test]
 		public void MakeArray ()
 		{
 			var x = Signature.MakeArray (Signature.Int32Sig);
 			Assert.AreEqual ("ai", x.Value, "#1");
 		}
-		
+
 		[Test]
 		public void MakeArrayOfStruct ()
 		{
@@ -138,7 +138,7 @@ namespace DBus.Tests
 			var x = Signature.MakeArray (type);
 			Assert.AreEqual ("a(ii)", x.Value, "#1");
 		}
-		
+
 		[Test]
 		public void MakeArrayOfArray ()
 		{
@@ -146,14 +146,14 @@ namespace DBus.Tests
 			x = Signature.MakeArray (x);
 			Assert.AreEqual ("aai", x.Value, "#1");
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (ArgumentException))]
 		public void MakeArray_NotSingleCompleteType ()
 		{
 			Signature.MakeArray (Signature.Int32Sig + Signature.UInt16Sig);
 		}
-		
+
 		[Test]
 		public void MakeStruct ()
 		{
@@ -161,14 +161,14 @@ namespace DBus.Tests
 			var x = Signature.MakeStruct (Signature.ByteSig + Signature.StringSig);
 			Assert.AreEqual ("(ys)", x.Value, "#1");
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (ArgumentException))]
 		public void MakeStruct_Empty ()
 		{
 			Signature.MakeStruct (Signature.Empty);
 		}
-		
+
 		[Test]
 		public void MakeDictionaryEntry ()
 		{
@@ -176,7 +176,7 @@ namespace DBus.Tests
 			var x = Signature.MakeDictEntry (Signature.StringSig, Signature.Int32Sig);
 			Assert.AreEqual ("{si}", x.Value, "#1");
 		}
-		
+
 		[Test]
 		public void MakeDictionary ()
 		{
@@ -184,7 +184,7 @@ namespace DBus.Tests
 			var x = Signature.MakeDict (Signature.StringSig, Signature.Int32Sig);
 			Assert.AreEqual ("a{si}", x.Value, "#1");
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (ArgumentException))]
 		public void MakeDictionary_TwoCompleteTypes_Key ()
@@ -192,7 +192,7 @@ namespace DBus.Tests
 			// They key is not a single complete type
 			 Signature.MakeDictEntry (Signature.StringSig + Signature.Int32Sig, Signature.Int32Sig);
 		}
-		
+
 		[Test]
 		[ExpectedException (typeof (ArgumentException))]
 		public void MakeDictionary_TwoCompleteTypes_Value ()
